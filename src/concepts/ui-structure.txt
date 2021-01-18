@@ -1,0 +1,8 @@
+-sorting algorithms component
+    [button:bubble sort][button:another sort algorithm][]...
+    [pixel:x][pixel:y]...
+    [button:mix]
+
+-pixel.component
+    @input: position: x
+    

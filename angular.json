@@ -124,5 +124,8 @@
       }
     }
   },
-  "defaultProject": "pixels2sort"
+  "defaultProject": "pixels2sort",
+  "cli": {
+    "analytics": "72407207-8cf1-4dff-90f5-a2f3cb6e7419"
+  }
 }

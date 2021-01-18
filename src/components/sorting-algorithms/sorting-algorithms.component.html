@@ -1,0 +1,6 @@
+<button (click)="mixPixels()">Mix pixels</button>
+<button (click)="bubleSort()">Bubble Sort</button>
+<h3>{{ sortingStatus }}</h3>
+<div *ngFor="let pixel of pixels">
+  <pixel [index]="pixel"></pixel>
+</div>

@@ -3,10 +3,14 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { SortingAlgorithmsComponent} from '../components/sorting-algorithms/sorting-algorithms.component'
+import { PixelComponent} from '../components/pixel/pixel.component'
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    SortingAlgorithmsComponent,
+    PixelComponent
   ],
   imports: [
     BrowserModule,
