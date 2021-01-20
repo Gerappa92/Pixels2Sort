@@ -1,1 +1,19 @@
+.button {
+  margin: 10px;
+  color: wh;
+  background-color: #63d471;
+  padding: 10px 20px;
+  border-style: none;
+  border-radius: 8px;
+  box-shadow: inset 0px 0px 10px 2px #6a7152;
+  font-weight: bolder;
+}
 
+.button-group {
+  position: relative;
+}
+
+.pixels {
+  position: relative;
+  padding-left: 5vh;
+}

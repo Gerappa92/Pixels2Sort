@@ -15,7 +15,7 @@ import {
 export class PixelComponent implements OnInit, AfterViewInit {
   color = '#000000';
   top = '80px';
-  indexValue = 0;
+  value = 0;
 
   @ViewChild('pixelDiv') pixelDiv: ElementRef<HTMLElement>;
 
@@ -23,7 +23,7 @@ export class PixelComponent implements OnInit, AfterViewInit {
   set index(value: number) {
     this.color = this.getColor(value);
     this.top = this.getTop(value) + 'px';
-    this.indexValue = value;
+    this.value = value;
   }
 
   constructor() {}
@@ -33,24 +33,30 @@ export class PixelComponent implements OnInit, AfterViewInit {
   }
 
   getTop(index: number) {
-    return 55 * index + 80;
+    return 55 * index;
   }
 
-  move(index: number) {
+  async move(index: number) {
     let newTop = this.getTop(index);
     this.pixelDiv.nativeElement.style.top = newTop + 'px';
+    await this.sleep(500);
   }
 
-  moveOnSide(right: boolean = true) {
+  async moveOnSide(right: boolean = true) {
     const factor = right ? 1 : 0;
     this.pixelDiv.nativeElement.style.transform = `translateX(${
       factor * 100
     }%)`;
+    await this.sleep(500);
   }
 
   ngOnInit() {}
 
   ngAfterViewInit() {
     // console.log(this.pixelDiv.nativeElement);
+  }
+
+  sleep(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }
