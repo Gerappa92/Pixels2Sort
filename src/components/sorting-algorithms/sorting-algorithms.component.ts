@@ -1,11 +1,7 @@
-import {
-  Component,
-  OnInit,
-  QueryList,
-  ViewChildren,
-  AfterViewChecked,
-} from '@angular/core';
-import { interval } from 'rxjs';
+import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
+import BubleSortStrategy from 'src/services/sorting/buble-sort-strategy';
+import { InsertionSortStrategy } from 'src/services/sorting/insertion-sort-strategy';
+import { SortingSerice as SortSerice } from 'src/services/sorting/sort-service';
 import { PixelComponent } from '../pixel/pixel.component';
 
 @Component({
@@ -16,6 +12,7 @@ import { PixelComponent } from '../pixel/pixel.component';
 export class SortingAlgorithmsComponent implements OnInit {
   pixels: number[] = [];
   sortingStatus: string = 'Pixels 2 sort...';
+  sortService: SortSerice;
 
   @ViewChildren(PixelComponent)
   private _pixelsComponents: QueryList<PixelComponent>;
@@ -24,11 +21,11 @@ export class SortingAlgorithmsComponent implements OnInit {
     for (let i = 0; i < 10; i++) {
       this.pixels[i] = i;
     }
+    this.sortService = new SortSerice(new BubleSortStrategy());
   }
 
   ngOnInit() {
     console.log('pixels', this.pixels);
-    // console.log('_pixelsComponents', this._pixelsComponents);
   }
 
   async mixPixels() {
@@ -54,18 +51,9 @@ export class SortingAlgorithmsComponent implements OnInit {
   async bubleSort() {
     const intervalSortStatus = this.setSortingLoader();
 
-    let sort = true;
-    while (sort) {
-      sort = false;
-      for (let i = 1; i < this.pixels.length; i++) {
-        await this.comparePixels(i, i - 1, true);
-        if (this.pixels[i - 1] > this.pixels[i]) {
-          sort = true;
-          await this.switchPixels(i, i - 1);
-        }
-        await this.comparePixels(i, i - 1, false);
-      }
-    }
+    this.sortService.setStrategy(new BubleSortStrategy());
+    this.sortService.sort(this.pixels);
+    await this.sortService.sortComponents(this._pixelsComponents.toArray());
 
     clearInterval(intervalSortStatus);
     this.sortingStatus = 'Sorting completed!';
@@ -73,43 +61,11 @@ export class SortingAlgorithmsComponent implements OnInit {
 
   async insertionSort() {
     const intervalLoader = this.setSortingLoader();
-    const pc = this._pixelsComponents.toArray();
 
-    for (let i = 1; i < this.pixels.length; i++) {
-      const key = this.pixels[i];
-      const keyPc = pc[i];
-      await pc[i].moveOnSide(true);
-      let index = i;
+    this.sortService.setStrategy(new InsertionSortStrategy());
+    this.sortService.sort(this.pixels);
+    await this.sortService.sortComponents(this._pixelsComponents.toArray());
 
-      for (let j = i - 1; j >= 0; j--) {
-        if (key > this.pixels[j]) {
-          await pc[j].moveOnSide(true);
-          await pc[j].moveOnSide(false);
-          break;
-        }
-        await pc[j].moveOnSide(true);
-        await pc[j].moveOnSide(false);
-      }
-
-      for (let j = i - 1; j >= 0; j--) {
-        if (key > this.pixels[j]) {
-          break;
-        }
-        this.pixels[j + 1] = this.pixels[j];
-
-        pc[j].move(j + 1);
-        pc[j + 1] = pc[j];
-        index = j;
-      }
-
-      this.pixels[index] = key;
-      pc[index] = keyPc;
-      await this.sleep(500);
-      await keyPc.move(index);
-      await keyPc.moveOnSide(false);
-    }
-
-    console.log(this.pixels);
     clearInterval(intervalLoader);
     this.sortingStatus = 'Sorting completed!';
   }
@@ -117,7 +73,7 @@ export class SortingAlgorithmsComponent implements OnInit {
   private setSortingLoader() {
     this.sortingStatus = 'Sorting';
     return setInterval(() => {
-      if (this.sortingStatus.length === 10) {
+      if (this.sortingStatus.length >= 10) {
         this.sortingStatus = 'Sorting';
       } else {
         this.sortingStatus += '.';
