@@ -36,9 +36,19 @@ export class PixelComponent implements OnInit, AfterViewInit {
     return 55 * index;
   }
 
-  async move(index: number) {
+  async move(index: number, sleep: number = 500) {
     let newTop = this.getTop(index);
     this.pixelDiv.nativeElement.style.top = newTop + 'px';
+    await this.sleep(sleep);
+  }
+
+  async moveOnRight() {
+    this.pixelDiv.nativeElement.style.transform = `translateX(${100}%)`;
+    await this.sleep(500);
+  }
+
+  async moveOnLeft() {
+    this.pixelDiv.nativeElement.style.transform = `translateX(${0}%)`;
     await this.sleep(500);
   }
 
