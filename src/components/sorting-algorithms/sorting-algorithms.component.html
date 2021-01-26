@@ -1,7 +1,13 @@
 <div class="button-group">
-  <button class="button" (click)="mixPixels()">Mix pixels</button>
-  <button class="button" (click)="bubleSort()">Bubble Sort</button>
-  <button class="button" (click)="insertionSort()">Insertion Sort</button>
+  <button class="button" (click)="mixPixels()" [disabled]="disabledButtons">
+    Mix pixels
+  </button>
+  <button class="button" (click)="bubleSort()" [disabled]="disabledButtons">
+    Bubble Sort
+  </button>
+  <button class="button" (click)="insertionSort()" [disabled]="disabledButtons">
+    Insertion Sort
+  </button>
 </div>
 <h3>{{ sortingStatus }}</h3>
 <div class="pixels">

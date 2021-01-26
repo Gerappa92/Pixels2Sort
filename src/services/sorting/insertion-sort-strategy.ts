@@ -39,7 +39,7 @@ export class InsertionSortStrategy implements SortStrategy {
         emptyIndex = j;
       }
       pixels[emptyIndex] = comparePixel;
-      await comparePixel.move(emptyIndex);
+      comparePixel.move(emptyIndex);
       await comparePixel.moveOnLeft();
     }
   }

@@ -14,6 +14,8 @@ export class SortingAlgorithmsComponent implements OnInit {
   sortingStatus: string = 'Pixels 2 sort...';
   sortService: SortSerice;
 
+  disabledButtons: boolean = false;
+
   @ViewChildren(PixelComponent)
   private _pixelsComponents: QueryList<PixelComponent>;
 
@@ -29,6 +31,7 @@ export class SortingAlgorithmsComponent implements OnInit {
   }
 
   async mixPixels() {
+    this.disabledButtons = true;
     this.sortingStatus = 'Mixing pixels...';
     for (let i = 2; i < this._pixelsComponents.length; i++) {
       if (i % 2 === 0) {
@@ -46,28 +49,35 @@ export class SortingAlgorithmsComponent implements OnInit {
       await this.switchPixels(r1, i, false);
     }
     this.sortingStatus = 'Mixing completed!';
+    this.disabledButtons = false;
   }
 
   async bubleSort() {
-    const intervalSortStatus = this.setSortingLoader();
+    this.disabledButtons = true;
+    const intervalLoader = this.setSortingLoader();
 
     this.sortService.setStrategy(new BubleSortStrategy());
     this.sortService.sort(this.pixels);
-    await this.sortService.sortComponents(this._pixelsComponents.toArray());
-
-    clearInterval(intervalSortStatus);
-    this.sortingStatus = 'Sorting completed!';
+    this.sortService
+      .sortComponents(this._pixelsComponents.toArray())
+      .then(() => {
+        this.disabledButtons = false;
+        this.stopSortingLoader(intervalLoader);
+      });
   }
 
   async insertionSort() {
+    this.disabledButtons = true;
     const intervalLoader = this.setSortingLoader();
 
     this.sortService.setStrategy(new InsertionSortStrategy());
     this.sortService.sort(this.pixels);
-    await this.sortService.sortComponents(this._pixelsComponents.toArray());
-
-    clearInterval(intervalLoader);
-    this.sortingStatus = 'Sorting completed!';
+    this.sortService
+      .sortComponents(this._pixelsComponents.toArray())
+      .then(() => {
+        this.stopSortingLoader(intervalLoader);
+        this.disabledButtons = false;
+      });
   }
 
   private setSortingLoader() {
@@ -79,6 +89,11 @@ export class SortingAlgorithmsComponent implements OnInit {
         this.sortingStatus += '.';
       }
     }, 500);
+  }
+
+  private stopSortingLoader(interval: any) {
+    clearInterval(interval);
+    this.sortingStatus = 'Sorting completed!';
   }
 
   private getRandomInt(min: number, max: number) {

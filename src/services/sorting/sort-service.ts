@@ -1,3 +1,4 @@
+import { promise } from 'protractor';
 import { PixelComponent } from 'src/components/pixel/pixel.component';
 import { SortStrategy } from './sort-strategy';
 
@@ -15,7 +16,7 @@ export class SortingSerice {
     this.sortStrategy.sort(numbers);
   }
 
-  sortComponents(pixelComponents: PixelComponent[]) {
-    this.sortStrategy.sortComponents(pixelComponents);
+  async sortComponents(pixelComponents: PixelComponent[]): Promise<void> {
+    await this.sortStrategy.sortComponents(pixelComponents);
   }
 }
